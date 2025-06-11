@@ -1,0 +1,4 @@
+venv/
+data/
+app_api/__pycache__/
+model_training/
