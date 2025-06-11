@@ -1,14 +1,29 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from schema.user_input import UserInput
 from schema.prediction_response import PredictionResponse
-from model.predict import predict_output, model,model_version
+from model.predict import predict_output, model, model_version
+import os
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins, adjust as needed
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods, adjust as needed
+    allow_headers=["*"],  # Allows all headers, adjust as needed
+)
+
+# Serve frontend
+frontend_path = os.path.join(os.path.dirname(__file__), '..', 'frontend')
+app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
         
-@app.get('/')
-def home():
-    return {"message": "Welcome to the insurance premium prediction API"}
+# @app.get('/')
+# def home():
+#     return {"message": "Welcome to the insurance premium prediction API"}
 
 @app.get('/health')
 def health_check():
@@ -22,7 +37,7 @@ def health_check():
 def predict_premium(data: UserInput):
     user_input = {
         'income_lpa': data.income_lpa,
-        'occupation': data.occuption,
+        'occupation': data.occupation,
         'bmi': data.bmi,
         'age_group': data.age_group,
         'lifestyle_risk': data.lifestyle_risk,
