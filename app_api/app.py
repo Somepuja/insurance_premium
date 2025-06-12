@@ -17,13 +17,10 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers, adjust as needed
 )
 
-# Serve frontend
-frontend_path = os.path.join(os.path.dirname(__file__), '..', 'frontend')
-app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
         
-# @app.get('/')
-# def home():
-#     return {"message": "Welcome to the insurance premium prediction API"}
+@app.get('/')
+def home():
+    return {"message": "Welcome to the insurance premium prediction API"}
 
 @app.get('/health')
 def health_check():
